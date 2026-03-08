@@ -23,6 +23,8 @@ Current stage: early MVP. Focus is data model and API foundation, not UI polish.
 | Language       | TypeScript (strict)             | Safer code, easier refactoring, no `any`                         |
 | Database       | PostgreSQL                      | Relational model; unique constraints for deduplication           |
 | Auth           | Supabase Auth                   | OAuth (Google/GitHub); integrated with DB, RLS, session handling |
+| Styling        | Tailwind CSS                    | Utility-first; no context switching to CSS files                 |
+| UI Components  | shadcn/ui                       | Pre-built accessible components; code lives in your project      |
 | Spam prevention| Cloudflare Turnstile            | CAPTCHA at signup and suspicious activity points                 |
 | Hosting        | Vercel                          | Zero-config Next.js deployment, preview environments            |
 | Database host  | Supabase                        | Managed Postgres, generous free tier, good DX                   |
@@ -41,9 +43,9 @@ Next.js UI (Server + Client Components)
             │
 Next.js API Route Handlers
             │
-       Prisma ORM
+     Supabase Client
             │
-     PostgreSQL (Neon)
+  PostgreSQL (Supabase)
 ```
 
 ---
@@ -138,6 +140,17 @@ contain no business logic.
 - `403` Forbidden
 - `409` Conflict (duplicate resource)
 - `500` Server Error
+
+**Styling**
+- Tailwind utility classes only — no CSS modules, no inline styles, no styled-components
+- For complex or repeated class strings, extract into a component rather than using `@apply`
+- shadcn/ui is the component library — do not install Material UI or Chakra
+- shadcn components live in `components/ui/` and can be freely edited
+- Add new shadcn components via CLI: `npx shadcn@latest add [component]`
+
+> **UI component decision:** shadcn/ui is chosen over Material UI or Chakra because
+> it ships source code directly into your project, works natively with Tailwind, and
+> has no version lock-in. Do not suggest alternative component libraries.
 
 **Error handling**
 - Never throw raw errors out of lib functions
@@ -240,7 +253,7 @@ Auth + rate limits + CAPTCHA + reporting. Do not introduce ML-based spam detecti
 *Update this section at the start/end of each working session.*
 
 **Immediate next steps (in order):**
-1. `prisma/schema.prisma` — full data model
+1. Create database schema in Supabase dashboard
 2. `lib/canonicalizeUrl.ts` — URL normalization + hashing
 3. `app/api/resources/route.ts` — POST endpoint with duplicate protection
 
