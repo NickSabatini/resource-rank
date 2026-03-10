@@ -57,7 +57,7 @@ Next.js API Route Handlers
 ├── app/                          # Next.js App Router
 │   ├── layout.tsx                # Root layout — fonts, providers, global nav
 │   ├── page.tsx                  # Homepage — topic discovery
-│   ├── (auth)/                   # Auth pages — Clerk-handled
+│   ├── (auth)/                   # Auth pages — Supabase Auth handled
 │   │   ├── login/page.tsx
 │   │   └── signup/page.tsx
 │   ├── topics/
