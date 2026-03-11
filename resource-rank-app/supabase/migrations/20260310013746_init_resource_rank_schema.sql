@@ -8,7 +8,7 @@ create type public.resource_type as enum ('article', 'book', 'video', 'course', 
 
 create table public.users (
   id uuid primary key references auth.users(id) on delete cascade,
-  email text not null unique,
+  email text unique,
   display_name text not null,
   created_at timestamptz not null default now(),
   trust_level integer not null default 0 check (trust_level >= 0),
@@ -78,8 +78,13 @@ begin
   insert into public.users (id, email, display_name)
   values (
     new.id,
-    coalesce(new.email, ''),
-    coalesce(new.raw_user_meta_data ->> 'display_name', split_part(coalesce(new.email, ''), '@', 1), 'user')
+    new.email,
+    coalesce(
+      new.raw_user_meta_data ->> 'display_name',
+      new.raw_user_meta_data ->> 'name',
+      split_part(new.email, '@', 1),
+      'user'
+    )
   )
   on conflict (id) do nothing;
 
@@ -187,10 +192,10 @@ alter table public.resources enable row level security;
 alter table public.votes enable row level security;
 alter table public.reports enable row level security;
 
-create policy "Users are readable by everyone"
+create policy "Users can read own profile"
   on public.users
   for select
-  using (true);
+  using (auth.uid() = id);
 
 create policy "Users can insert own profile"
   on public.users

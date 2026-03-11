@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Then fill in the values in `.env.local`.
+
 First, run the development server:
 
 ```bash
